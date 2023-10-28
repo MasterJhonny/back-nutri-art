@@ -47,6 +47,7 @@ const schemaMaterial = new Schema({
     currentUnitCost: {
         type: Number,
         require: true,
+        default: 0,
     },
     provider: {
         type: String,

@@ -57,6 +57,7 @@ router.post(
         console.log("🚀 ~ file: router.operations.js:56 ~ listInOperations:", listInOperations);
         newOperation = buildDataOutOperation(data, listInOperations, lastOperation);
       }
+      await serviceMaterial.update(data.materialId, {stock: newOperation.balances.amount});
       const rta = await service.create(newOperation);
       res.status(201).json(rta);
     } catch (error) {

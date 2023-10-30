@@ -9,35 +9,8 @@ const movements = new Schema({
         default: 0
     },
     currentUnitCost: {
-        type: Number,
+        type: [Number],
         require: true,
-        default: 0
-    },
-    total: {
-        type: Number,
-        require: true,
-        default: 0
-    }
-});
-
-const balances = new Schema({
-    amount: {
-        type: Number,
-        require: true,
-        default: 0
-    },
-    currentUnitCost: {
-        type: Number,
-        require: true,
-        default: 0,
-        get: (v) => {
-            // Redondea el valor a 2 decimales antes de devolverlo
-            return parseFloat(v);
-        },
-        set: (v) => {
-            // Convierte el valor a un número de coma flotante
-            return parseFloat(v);
-        },
     },
     total: {
         type: Number,
@@ -60,10 +33,19 @@ const schemaOperations = new Schema({
         require: true,
     },
     record: movements,
-    balances: balances,
+    balances: movements,
     materialId: {
         type: String,
         require: true,
+    },
+    available: {
+        type: Boolean,
+    },
+    partial: {
+        type: Boolean,
+    },
+    partialQuantity: {
+        type: Number,
     },
     created_at: {
         type: Date,

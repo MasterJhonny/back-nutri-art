@@ -15,10 +15,10 @@ class MaterialService {
     }
   
     async create(data) {
-      const newTodo = await ModelMaterial.create(data);
-
+      const newMaterial = await ModelMaterial.create(data);
       return { 
-        create: true
+        create: true,
+        newMaterial
       }
     }
   

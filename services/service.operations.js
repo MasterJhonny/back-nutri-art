@@ -13,7 +13,6 @@ class OperationService {
 
     async findByMaterialId(id) {
       const operations = await ModelOperations.find({ materialId: id });
-      console.log("🚀 ~ file: service.operations.js:32 ~ OperationService ~ findOne ~ operations:", operations)
       if(!operations) {
         throw new Error('Ups, user not found');
       }
@@ -52,6 +51,13 @@ class OperationService {
         delete: true,
         id,
       }
+    }
+    async findByMaterialIdByType(id, typeOper) {
+      const operations = await ModelOperations.find({ materialId: id, type: typeOper });
+      if(!operations) {
+        throw new Error('Ups, user not found');
+      }
+      return operations;
     }
 }
   

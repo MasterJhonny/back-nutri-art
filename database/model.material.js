@@ -57,6 +57,15 @@ const schemaMaterial = new Schema({
         type: String,
         require: true,
     },
+    lotSize: {
+        type: Number,
+        require: true,
+    },
+    quantityLot: {
+        type: Number,
+        require: true,
+        default: 0,
+    },
     created_at: {
         type: Date,
         default: Date.now()

@@ -1,11 +1,14 @@
 const express = require('express');
 
 const MaterialService = require('../services/service.material');
+const LoteService = require('../services/service.lotes');
+
 // const validatorHandler = require('./../middlewares/validator.handler');
 // const { updateTodoSchema, createTodoSchema, getTodoSchema } = require('./../schemas/user.schema');
 
 const router = express.Router();
 const service = new MaterialService();
+const serviceLote = new LoteService();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -37,8 +40,18 @@ router.post('/',
   async (req, res, next) => {
     try {
       const material = req.body;
-      console.log("🚀 ~ file: router.material.js:40 ~ material:", material)
+      // console.log("🚀 ~ file: router.material.js:40 ~ material:", material)
       const newMaterial = await service.create(material);
+      console.log("🚀 ~ file: router.material.js:50 ~ newMaterial:", newMaterial);
+      const newLote = {
+        detail: material.article,
+        count: 0,
+        measure: material.unitMeasure,
+        import: 0,
+        lotSize: material.lotSize, 
+        materialId: newMaterial.newMaterial._id, 
+      }
+      const rta = await serviceLote.create(newLote);
       res.status(201).json(newMaterial);
     } catch (error) {
       console.error(error);

@@ -1,5 +1,31 @@
 const OperationService = require("../services/service.operations");
+const LoteService = require("../services/service.lotes");
+
 const service = new OperationService();
+const serviceLotes = new LoteService();
+
+const updateCountLot = async (record) => {
+  console.log("🚀 ~ file: index.js:8 ~ updateCountLot ~ record:", record);
+  const lotes = await serviceLotes.find();
+  const lote = lotes[lotes.length - 1];
+  console.log("🚀 ~ file: index.js:10 ~ updateCountLot ~ lote:", lote);
+  const countAdvance = lote.count + record.amount;
+  console.log("🚀 ~ file: index.js:12 ~ updateCountLot ~ countAdvance:", countAdvance);
+  await serviceLotes.update(lote._id, { count: countAdvance, costs: record.currentUnitCost, import: record.total });
+  if (countAdvance >= lote.lotSize) {
+    const newLote = {
+      detail: lote.detail,
+      count: 0,
+      measure: lote.measure,
+      import: 0,
+      lotSize: lote.lotSize, 
+      materialId: lote.materialId, 
+    }
+    await serviceLotes.create(newLote);
+    return 0;
+  }
+  return countAdvance;
+}
 
 const applyPeps = (count, list = []) => {
   // declaration of var
@@ -37,7 +63,7 @@ const applyPeps = (count, list = []) => {
         amountAccumulate =
           amountAccumulate +
           list[i].partialQuantity * list[i].record.currentUnitCost;
-          service.update(list[i]._id, { partial: true, partialQuantity: 0 });
+          service.update(list[i]._id, { partial: false, partialQuantity: 0 });
       } else {
         amountAccumulate =
           amountAccumulate +
@@ -70,7 +96,10 @@ const buildDataInOperation = (data, listOperations) => {
       partial: false,
       partialQuantity: 0,
     };
-    return newOperation;
+    return {
+      data: newOperation,
+      countLot: 0
+    };
   }
   // get end balances
   const previouOperation = listOperations[listOperations.length - 1];
@@ -87,10 +116,13 @@ const buildDataInOperation = (data, listOperations) => {
     partial: false,
     partialQuantity: 0,
   };
-  return newOperation;
+  return {
+    data: newOperation,
+    countLot: 0
+  };
 };
 
-const buildDataOutOperation = (data, listOperations, lastOperation) => {
+const buildDataOutOperation = async (data, listOperations, lastOperation) => {
   console.log(
     "🚀 ~ file: index.js:81 ~ buildDataOutOperation ~ data: SALIDA----------------------------->",
     data
@@ -109,12 +141,17 @@ const buildDataOutOperation = (data, listOperations, lastOperation) => {
     currentUnitCost: dataForOut.listCost,
     total: lastOperation.balances.total - dataForOut.amountAccumulate
   }
+  // update count de of lot
+  const countLot = await updateCountLot(record);
   const newOperation = {
     ...data,
     record: record,
     balances: balances
   };
-  return newOperation;
+  return {
+    data: newOperation,
+    countLot
+  };
 };
 
 module.exports = { buildDataInOperation, buildDataOutOperation };

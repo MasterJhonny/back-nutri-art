@@ -44,21 +44,26 @@ router.post(
     try {
       const data = req.body;
       let newOperation = {};
+      let dataUpdatedMaterial = {};
       const listPreviouOperations = await service.findByMaterialId(data.materialId);
       console.log("🚀 ~ file: router.operations.js:48 ~ listPreviouOperations:", listPreviouOperations);
       if (data.type === 1) {
         // build data in
         newOperation = buildDataInOperation(data, listPreviouOperations);
         console.log("🚀 ~ file: router.operations.js:52 ~ newOperation:", newOperation);
+        dataUpdatedMaterial = {stock: newOperation.data.balances.amount}
       } else {
         // build data out
         const listInOperations = await service.findByAvailablePartialMaterialId(data.materialId);
         const lastOperation = listPreviouOperations[listPreviouOperations.length - 1];
         console.log("🚀 ~ file: router.operations.js:56 ~ listInOperations:", listInOperations);
-        newOperation = buildDataOutOperation(data, listInOperations, lastOperation);
+        newOperation = await buildDataOutOperation(data, listInOperations, lastOperation);
+        console.log("🚀 ~ file: router.operations.js:61 ~ newOperation:", newOperation);
+        dataUpdatedMaterial = {stock: newOperation.data.balances.amount, quantityLot: newOperation.countLot}
       }
-      await serviceMaterial.update(data.materialId, {stock: newOperation.balances.amount});
-      const rta = await service.create(newOperation);
+      // ---updated material and save operation
+      await serviceMaterial.update(data.materialId, dataUpdatedMaterial);
+      const rta = await service.create(newOperation.data);
       res.status(201).json(rta);
     } catch (error) {
       console.error(error);

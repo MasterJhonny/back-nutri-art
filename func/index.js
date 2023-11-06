@@ -4,9 +4,9 @@ const LoteService = require("../services/service.lotes");
 const service = new OperationService();
 const serviceLotes = new LoteService();
 
-const updateCountLot = async (record) => {
+const updateCountLot = async (record, id) => {
   console.log("🚀 ~ file: index.js:8 ~ updateCountLot ~ record:", record);
-  const lotes = await serviceLotes.find();
+  const lotes = await serviceLotes.findByMaterialId(id);
   const lote = lotes[lotes.length - 1];
   console.log("🚀 ~ file: index.js:10 ~ updateCountLot ~ lote:", lote);
   const countAdvance = lote.count + record.amount;
@@ -142,7 +142,7 @@ const buildDataOutOperation = async (data, listOperations, lastOperation) => {
     total: lastOperation.balances.total - dataForOut.amountAccumulate
   }
   // update count de of lot
-  const countLot = await updateCountLot(record);
+  const countLot = await updateCountLot(record, data.materialId);
   const newOperation = {
     ...data,
     record: record,
@@ -154,4 +154,10 @@ const buildDataOutOperation = async (data, listOperations, lastOperation) => {
   };
 };
 
-module.exports = { buildDataInOperation, buildDataOutOperation };
+const filterSetLotComplete = (lotes = []) => {
+  const setLotes = lotes.filter(lot=> lot.count === lot.lotSize);
+  console.log("🚀 ~ file: index.js:159 ~ filterSetLotComplete ~ setLotes:", setLotes);
+  return setLotes;
+}
+
+module.exports = { buildDataInOperation, buildDataOutOperation, filterSetLotComplete };

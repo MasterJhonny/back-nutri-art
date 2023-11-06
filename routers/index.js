@@ -5,6 +5,7 @@ const materialRouter = require('./router.material');
 const operationsRouter = require('./router.operations');
 const employesRouter = require('./router.employes');
 const inCostsRouter = require('./router.indirect.costs');
+const lotesRouter = require('./router.lotes');
 
 function routerApi(app) {
   const router = express.Router();
@@ -14,6 +15,7 @@ function routerApi(app) {
   router.use('/operations', operationsRouter);
   router.use('/employes', employesRouter);
   router.use('/incost', inCostsRouter);
+  router.use('/lotes', lotesRouter);
 }
 
 module.exports = routerApi;

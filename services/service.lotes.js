@@ -18,16 +18,26 @@ class LotesService {
     }
   
     async findOne(id) {
-      const lote = await ModelLotes.find({_id: id});
+      const lote = await ModelLotes.find({ _id: id });
       console.log("🚀 ~ file: service.lote.js:32 ~ LotesService ~ findOne ~ lote:", lote)
       if(!lote) {
         throw new Error('Ups, user not found');
       }
       return lote[0];
     }
+
+    async findByMaterialId(id) {
+      const lotes = await ModelLotes.find({ materialId: id });
+      console.log("🚀 ~ file: service.lote.js:32 ~ LotesService ~ findByMaterialId ~ lote:", lotes)
+      if(!lotes) {
+        throw new Error('Ups, user not found');
+      }
+      return lotes;
+    }
   
     async update(id, changes) {
       const rta = await ModelLotes.findByIdAndUpdate(id, changes);
+      console.log("🚀 ~ file: service.lotes.js:31 ~ LotesService ~ update ~ rta:", rta);
       return rta;
     }
   

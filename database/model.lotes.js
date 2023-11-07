@@ -31,6 +31,10 @@ const schemaLotes = Schema({
         type: String,
         require: true,
     },
+    numberLotSet: {
+        type: Number,
+        require: true,
+    },
     created_at: {
         type: Date,
         default: Date.now()

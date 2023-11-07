@@ -19,12 +19,19 @@ const updateCountLot = async (record, id) => {
       measure: lote.measure,
       import: 0,
       lotSize: lote.lotSize, 
-      materialId: lote.materialId, 
+      materialId: lote.materialId,
+      numberLotSet: lotes.length + 1,
     }
     await serviceLotes.create(newLote);
-    return 0;
+    return {
+      countAdvance: 0,
+      numberLot: newLote.numberLotSet,
+    };
   }
-  return countAdvance;
+  return {
+    countAdvance,
+    numberLot: lote.numberLotSet,
+  };
 }
 
 const applyPeps = (count, list = []) => {
@@ -142,7 +149,7 @@ const buildDataOutOperation = async (data, listOperations, lastOperation) => {
     total: lastOperation.balances.total - dataForOut.amountAccumulate
   }
   // update count de of lot
-  const countLot = await updateCountLot(record, data.materialId);
+  const dataLot = await updateCountLot(record, data.materialId);
   const newOperation = {
     ...data,
     record: record,
@@ -150,14 +157,13 @@ const buildDataOutOperation = async (data, listOperations, lastOperation) => {
   };
   return {
     data: newOperation,
-    countLot
+    dataLot,
   };
 };
 
-const filterSetLotComplete = (lotes = []) => {
-  const setLotes = lotes.filter(lot=> lot.count === lot.lotSize);
-  console.log("🚀 ~ file: index.js:159 ~ filterSetLotComplete ~ setLotes:", setLotes);
+const filterSetNumberLot = (lotes = [], numberLot = 1) => {
+  const setLotes = lotes.filter(lot=> lot.numberLotSet === numberLot);
   return setLotes;
 }
 
-module.exports = { buildDataInOperation, buildDataOutOperation, filterSetLotComplete };
+module.exports = { buildDataInOperation, buildDataOutOperation, filterSetNumberLot };

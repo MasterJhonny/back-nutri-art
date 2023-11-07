@@ -1,6 +1,6 @@
 const express = require('express');
 const LoteService = require('../services/service.lotes');
-const { filterSetLotComplete } = require('../func');
+const { filterSetNumberLot } = require('../func');
 
 const router = express.Router();
 const service = new LoteService();
@@ -15,11 +15,12 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/setcompleted', async (req, res, next) => {
+router.get('/set-lotes-number/:numberLot', async (req, res, next) => {
     try {
+      const { numberLot } = req.params;
+      console.log("🚀 ~ file: router.lotes.js:21 ~ router.get ~ numberLot:", numberLot);
       const lotes = await service.find();
-      console.log("🚀 ~ file: router.lotes.js:36 ~ router.get ~ lotes:", lotes);
-      const setLotes = filterSetLotComplete(lotes);
+      const setLotes = filterSetNumberLot(lotes, parseInt(numberLot));
       res.status(200).json(setLotes);
     } catch (error) {
       // next(error);

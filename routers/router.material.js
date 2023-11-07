@@ -49,7 +49,8 @@ router.post('/',
         measure: material.unitMeasure,
         import: 0,
         lotSize: material.lotSize, 
-        materialId: newMaterial.newMaterial._id, 
+        materialId: newMaterial.newMaterial._id,
+        numberLotSet: 1,
       }
       const rta = await serviceLote.create(newLote);
       res.status(201).json(newMaterial);

@@ -59,7 +59,7 @@ router.post(
         console.log("🚀 ~ file: router.operations.js:56 ~ listInOperations:", listInOperations);
         newOperation = await buildDataOutOperation(data, listInOperations, lastOperation);
         console.log("🚀 ~ file: router.operations.js:61 ~ newOperation:", newOperation);
-        dataUpdatedMaterial = {stock: newOperation.data.balances.amount, quantityLot: newOperation.countLot}
+        dataUpdatedMaterial = {stock: newOperation.data.balances.amount, quantityLot: newOperation.dataLot.countAdvance, numberLot: newOperation.dataLot.numberLot }
       }
       // ---updated material and save operation
       await serviceMaterial.update(data.materialId, dataUpdatedMaterial);

@@ -66,6 +66,11 @@ const schemaMaterial = new Schema({
         require: true,
         default: 0,
     },
+    numberLot: {
+        type: Number,
+        require: true,
+        default: 1,
+    },
     created_at: {
         type: Date,
         default: Date.now()

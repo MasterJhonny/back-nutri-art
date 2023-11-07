@@ -11,6 +11,11 @@ const schemaEmploye = Schema({
         type: String,
         require: true
     },
+    hours: {
+        type: Number,
+        require: true,
+        default: 40,
+    },
     salary: {
         type: Number,
         require: true

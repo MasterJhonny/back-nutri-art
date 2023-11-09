@@ -1,6 +1,8 @@
 const OperationService = require("../services/service.operations");
 const LoteService = require("../services/service.lotes");
 
+const { amountLotPerMonth, defaultLotSize } = require("../const");
+
 const service = new OperationService();
 const serviceLotes = new LoteService();
 
@@ -166,4 +168,49 @@ const filterSetNumberLot = (lotes = [], numberLot = 1) => {
   return setLotes;
 }
 
-module.exports = { buildDataInOperation, buildDataOutOperation, filterSetNumberLot };
+const generateCountLotes = (lotes = []) => {
+  const numbersLot = lotes.map(lot=> lot.numberLotSet);
+  const listCountLotes = [...new Set(numbersLot)];
+  return listCountLotes;
+}
+
+const generateSummarySetLotes = (listLotes = [], listSummaryProducts = []) => {
+  let listCountLotes = generateCountLotes(listLotes);
+  if (listSummaryProducts.length > 0) {
+    const listSummaryNumberLot = generateCountLotes(listSummaryProducts);
+    listCountLotes = listCountLotes.filter(numberLot=> !listSummaryNumberLot.includes(numberLot));
+  }
+  const summariesLotes = [];
+  for (let i = 0; i < listCountLotes.length; i++) {
+    const numberLot = listCountLotes[i];
+    const setLotes = listLotes.filter(lot=> lot.numberLotSet === numberLot);
+    const isCompletedSetLot = setLotes.every(lot=> lot.lotSize === lot.count);
+    const total = setLotes.reduce((adition, lot)=> adition + lot.import, 0);
+    const newSummary = {
+      numberLot,
+      isCompletedSetLot,
+      directMaterialCost: total
+    }
+    summariesLotes.push(newSummary);
+  }
+  return summariesLotes;
+}
+
+const buildDataSummary = (dataSummary, employes = [], incosts = []) => {
+  const importWork = employes.reduce((adition, item) => adition + item.salary, 0);
+  const importInCost = incosts.reduce((adition, item)=> adition + item.amountMoth, 0);
+  const newSummary = {
+    numberLotSet: dataSummary.numberLot,
+    directMaterialCost: dataSummary.directMaterialCost,
+    workforceCost: importWork/amountLotPerMonth,
+    indirectCost: importInCost/amountLotPerMonth,
+    productionCost: dataSummary.directMaterialCost + (importWork/amountLotPerMonth) + (importInCost/amountLotPerMonth),
+    lotSize: defaultLotSize,
+  }
+  return {
+    ...newSummary,
+    unitCost: newSummary.productionCost/defaultLotSize,
+  };
+}
+
+module.exports = { buildDataInOperation, buildDataOutOperation, filterSetNumberLot, generateSummarySetLotes, buildDataSummary };

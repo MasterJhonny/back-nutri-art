@@ -1,9 +1,14 @@
 const express = require('express');
 const LoteService = require('../services/service.lotes');
-const { filterSetNumberLot } = require('../func');
+const OperationService = require('../services/service.operations');
+const SummaryCostService = require('../services/service.summary.cost');
+
+const { filterSetNumberLot, generateSummarySetLotes } = require('../func');
 
 const router = express.Router();
 const service = new LoteService();
+const serviceOperation = new OperationService();
+const serviceSummaryCost = new SummaryCostService();
 
 router.get('/', async (req, res, next) => {
   try {
@@ -27,6 +32,17 @@ router.get('/set-lotes-number/:numberLot', async (req, res, next) => {
       console.error(error);
     }
   });
+
+router.get('/summaries-set-lotes', async (req, res, next) => {
+  try {
+    const reponse = await Promise.all([service.find(), serviceSummaryCost.find()]);
+    const summariesLotes = generateSummarySetLotes(reponse[0], reponse[1]);
+    res.status(200).json(summariesLotes);
+  } catch (error) {
+    // next(error);
+    console.error(error);
+  }
+});
 
 router.get('/:id',
   // validatorHandler(getTodoSchema, 'params'),

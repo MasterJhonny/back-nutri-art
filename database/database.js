@@ -11,6 +11,7 @@ const schemaOperations = require('./model.operations')
 const schemaEmploye = require('./model.employes')
 const schemaIndirectCost = require('./model.indirect.costs')
 const schemaLotes = require('./model.lotes')
+const schemaSummaryCost = require('./model.sumary.cost')
 
 
 //  created model 
@@ -20,6 +21,8 @@ const ModelOperations = mongoose.model('operations', schemaOperations);
 const ModelEmploye = mongoose.model('employes', schemaEmploye);
 const ModelIndirectCost = mongoose.model('indirectCosts', schemaIndirectCost);
 const ModelLotes = mongoose.model('lotes', schemaLotes);
+const ModelSummaryCost = mongoose.model('summariesCosts', schemaSummaryCost);
+
 
 // destructurin config
 const { user, password, database } = config;
@@ -37,4 +40,4 @@ db.connect(URI, {
 .then(()=> console.log('database yes!!'))
 .catch(err => console.error('[DATA BASE ERROR]', err))
 
-module.exports = { db, ModelUser, ModelMaterial, ModelOperations, ModelEmploye, ModelIndirectCost, ModelLotes }
+module.exports = { db, ModelUser, ModelMaterial, ModelOperations, ModelEmploye, ModelIndirectCost, ModelLotes, ModelSummaryCost }

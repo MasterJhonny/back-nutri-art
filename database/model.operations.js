@@ -47,6 +47,9 @@ const schemaOperations = new Schema({
     partialQuantity: {
         type: Number,
     },
+    numberLot: {
+        type: Number,
+    },
     created_at: {
         type: Date,
         default: Date.now()

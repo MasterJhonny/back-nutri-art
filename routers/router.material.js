@@ -61,8 +61,6 @@ router.post('/',
   }
 );
 
-
-
 router.patch('/:id',
 // validatorHandler(getTodoSchema, 'params'),
 // validatorHandler(updateTodoSchema, 'body'),

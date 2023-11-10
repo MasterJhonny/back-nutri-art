@@ -4,7 +4,7 @@ const { defaultLotSize } = require("../const");
 
 const Schema = mongoose.Schema;
 
-const schemaLotes = Schema({
+const schemaSummary = Schema({
     directMaterialCost: {
         type: Number,
         require: true,
@@ -41,4 +41,4 @@ const schemaLotes = Schema({
 })
 
 
-module.exports = schemaLotes;
+module.exports = schemaSummary;

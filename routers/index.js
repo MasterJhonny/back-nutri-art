@@ -7,6 +7,8 @@ const employesRouter = require('./router.employes');
 const inCostsRouter = require('./router.indirect.costs');
 const lotesRouter = require('./router.lotes');
 const summaryCostRouter = require('./router.summary.cost');
+const salesRouter = require('./router.sales');
+
 
 function routerApi(app) {
   const router = express.Router();
@@ -18,6 +20,7 @@ function routerApi(app) {
   router.use('/incost', inCostsRouter);
   router.use('/lotes', lotesRouter);
   router.use('/summarycost', summaryCostRouter);
+  router.use('/sales', salesRouter);
 }
 
 module.exports = routerApi;

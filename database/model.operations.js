@@ -9,7 +9,7 @@ const movements = new Schema({
         default: 0
     },
     currentUnitCost: {
-        type: [Number],
+        type: [Schema.Types.Mixed],
         require: true,
     },
     total: {

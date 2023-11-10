@@ -16,7 +16,7 @@ const schemaLotes = Schema({
         require: true
     },
     costs: {
-        type: [Number],
+        type: [Schema.Types.Mixed],
         require: true
     },
     import: {
